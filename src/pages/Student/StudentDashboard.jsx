@@ -1,39 +1,118 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import QuizzesAttemptedTable from './QuizzesAttemptedTable';
-import { Button , message} from "antd";
+import { Button, message } from "antd";
 import api from "../../api/axios";
-
+import { getAttemptedQuizzes } from "../../api/studentApi";
+import "./Styles/StudentDashboard.css";
 
 function StudentDashboard() {
     const [quizzes, setQuizzes] = useState([]);
     const navigate = useNavigate();
-    useEffect(
-        () => {
-            async function fetchQuizAttempted(){
-                try{
-                    console.log("calling the function");
-                    const response = await api.get(`/user/student/quizzes/history`);
-                    console.log(response);
-                    setQuizzes(response.data);
-                    
-                }
-                catch{
-                    
-                    message.error("Failed to load attempted quizzes");
-                }
-            }
-            fetchQuizAttempted();
-        },[]
-    )
 
-  return (
-    <div>
-      <Button onClick={()=>navigate("/student/attempt_quiz")}>Attempt Quiz</Button>
-      <h2>Attempted Quizzes</h2>
-      <QuizzesAttemptedTable quizzes={quizzes}/>
-    </div>
-  )
+    useEffect(() => {
+        const fetchQuizAttempted = async () => {
+            try {
+                const data = await getAttemptedQuizzes();
+                setQuizzes(data);
+            } catch (error) {
+                message.error(
+                    error.response?.data?.message ||
+                    "Failed to load attempted quizzes"
+                );
+            }
+        };
+        fetchQuizAttempted();
+    }, []);
+
+    return (
+        <div className="sd-root">
+            <div className="sd-grid-overlay" />
+
+            {/* Sidebar */}
+            <aside className="sd-sidebar">
+                <div className="sd-brand">EDU<span>PORTAL</span></div>
+                <nav className="sd-nav">
+                    <div className="sd-nav-item active">
+                        <span className="sd-nav-icon">⬛</span>
+                        Dashboard
+                    </div>
+                    <div className="sd-nav-item" onClick={() => navigate("/student/attempt_quiz")}>
+                        <span className="sd-nav-icon">✏️</span>
+                        Attempt Quiz
+                    </div>
+                </nav>
+                <div className="sd-sidebar-footer">
+                    <div className="sd-avatar">S</div>
+                    <div className="sd-user-info">
+                        <span className="sd-user-name">Student</span>
+                        <span className="sd-user-role">Learner</span>
+                    </div>
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="sd-main">
+
+                {/* Header */}
+                <header className="sd-header">
+                    <div>
+                        <p className="sd-header-sub">Good to see you 👋</p>
+                        <h1 className="sd-header-title">Student Dashboard</h1>
+                    </div>
+                    <Button
+                        className="sd-attempt-btn"
+                        onClick={() => navigate("/student/attempt_quiz")}
+                    >
+                        + Attempt Quiz
+                    </Button>
+                </header>
+
+                {/* Stats Row */}
+                <div className="sd-stats-row">
+                    <div className="sd-stat-card">
+                        <span className="sd-stat-icon">📝</span>
+                        <div>
+                            <div className="sd-stat-num">{quizzes.length}</div>
+                            <div className="sd-stat-label">Quizzes Attempted</div>
+                        </div>
+                    </div>
+                    <div className="sd-stat-card">
+                        <span className="sd-stat-icon">✅</span>
+                        <div>
+                            <div className="sd-stat-num">
+                                {quizzes.filter(q => q.score >= 50).length}
+                            </div>
+                            <div className="sd-stat-label">Passed</div>
+                        </div>
+                    </div>
+                    <div className="sd-stat-card">
+                        <span className="sd-stat-icon">📈</span>
+                        <div>
+                            <div className="sd-stat-num">
+                                {quizzes.length > 0
+                                    ? Math.round(quizzes.reduce((acc, q) => acc + (q.score || 0), 0) / quizzes.length)
+                                    : 0}%
+                            </div>
+                            <div className="sd-stat-label">Avg. Score</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Table Section */}
+                <div className="sd-table-section">
+                    <div className="sd-table-header">
+                        <h2 className="sd-table-title">Attempted Quizzes</h2>
+                        <span className="sd-table-count">{quizzes.length} total</span>
+                    </div>
+                    <div className="sd-table-wrapper">
+                        <QuizzesAttemptedTable quizzes={quizzes} />
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    );
 }
 
-export default StudentDashboard
+export default StudentDashboard;

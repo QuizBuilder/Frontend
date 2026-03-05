@@ -1,26 +1,32 @@
 import React from 'react'
 import LeaderBoardRow from './LeaderBoardRow'
+import "./Styles/LeaderBoardTable.css";
 
-function LeaderBoardTable({leaderBoard}) {
-
+function LeaderBoardTable({ leaderBoard }) {
   return (
-    <div>
-      <table border="1" cellPadding="10">
-        <thead>
+    <div className="lbt-wrapper">
+      {leaderBoard.length === 0 ? (
+        <div className="lbt-empty">
+          <span className="lbt-empty-icon">🏆</span>
+          <p className="lbt-empty-title">No entries yet</p>
+          <p className="lbt-empty-sub">Leaderboard will appear once students submit</p>
+        </div>
+      ) : (
+        <table className="lbt-table">
+          <thead>
             <tr>
-                <th>Name</th>
-                <th>score</th>
-                <th>Rank</th>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Score</th>
             </tr>
-        </thead>
-        <tbody>
-        {
-            leaderBoard.map((entry, index)=>(
-                <LeaderBoardRow key={index} row={entry} />
-            ))
-        }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {leaderBoard.map((entry, index) => (
+              <LeaderBoardRow key={index} row={entry} />
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   )
 }

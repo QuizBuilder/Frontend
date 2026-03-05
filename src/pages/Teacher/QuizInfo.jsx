@@ -1,97 +1,150 @@
-import { message } from 'antd';
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useEffect } from 'react';
-import { Card, Descriptions, List, Spin, Divider } from "antd";
+import { message, Spin } from 'antd';
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import dayjs from "dayjs";
-import api from "../../api/axios";
+import { getQuizInfo } from "../../api/teacherApi";
+import "./Styles/QuizInfo.css";
 
 function QuizInfo() {
     const quizCode = useParams().quiz_code;
+    const navigate = useNavigate();
     const [quiz, setQuiz] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(()=>{fetchQuiz()},
-        [quizCode]
-    );
+    useEffect(() => { fetchQuiz() }, [quizCode]);
 
-    async function fetchQuiz(){
-        try{
-            const response = await api.get(`/user/teacher/quizzes/${quizCode}`);
-            setQuiz(response.data);
-        }
-        catch{
-            message.error("Cannot load the quiz info")
-        }
-        finally{
+    async function fetchQuiz() {
+        try {
+            const data = await getQuizInfo(quizCode);
+            setQuiz(data);
+        } catch (error) {
+            message.error(error.response?.data?.message || "Cannot load the quiz info");
+        } finally {
             setLoading(false);
         }
     }
 
-  if (loading) {
-    return <Spin size="large" />;
-  }
+    const getDifficultyClass = (difficulty) => {
+        switch (difficulty?.toUpperCase()) {
+            case 'EASY':   return 'badge-easy';
+            case 'MEDIUM': return 'badge-medium';
+            case 'HARD':   return 'badge-hard';
+            default:       return 'badge-default';
+        }
+    };
 
-  return (
-    <div >
-      <Card title="Quiz Information">
-        <Descriptions bordered column={2}>
-          <Descriptions.Item label="Quiz Code">
-            {quiz.code}
-          </Descriptions.Item>
+    if (loading) {
+        return (
+            <div className="qi-loading">
+                <div className="qi-grid-overlay" />
+                <Spin size="large" />
+                <p className="qi-loading-text">Loading quiz info...</p>
+            </div>
+        );
+    }
 
-          <Descriptions.Item label="Topic">
-            {quiz.topic}
-          </Descriptions.Item>
+    return (
+        <div className="qi-root">
+            <div className="qi-grid-overlay" />
 
-          <Descriptions.Item label="Difficulty">
-            {quiz.difficulty}
-          </Descriptions.Item>
+            {/* Topbar */}
+            <header className="qi-topbar">
+                <div className="qi-brand">EDU<span>PORTAL</span></div>
+                <div className="qi-topbar-right">
+                    <button className="qi-back-btn" onClick={() => navigate(-1)}>
+                        ← Back
+                    </button>
+                </div>
+            </header>
 
-          <Descriptions.Item label="No of Questions">
-            {quiz.noOfQuestions}
-          </Descriptions.Item>
+            <main className="qi-main">
 
-          <Descriptions.Item label="Start Time">
-            {dayjs(quiz.startTime).format("DD MMM YYYY, HH:mm")}
-          </Descriptions.Item>
+                {/* Page Title */}
+                <div className="qi-page-header">
+                    <div className="qi-badge">QUIZ INFO</div>
+                    <h1 className="qi-page-title">Quiz Details</h1>
+                    <p className="qi-page-sub">Review all information and questions for this quiz</p>
+                </div>
 
-          <Descriptions.Item label="End Time">
-            {dayjs(quiz.endTime).format("DD MMM YYYY, HH:mm")}
-          </Descriptions.Item>
-        </Descriptions>
-      </Card>
+                {/* Info Card */}
+                <div className="qi-info-card">
+                    <div className="qi-info-grid">
 
-      <Divider />
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">Quiz Code</span>
+                            <span className="qi-code">{quiz.code}</span>
+                        </div>
 
-      <Card title="Questions">
-        <List
-          dataSource={quiz.questionList}
-          renderItem={(q, index) => (
-            <List.Item>
-              <Card
-                style={{ width: "100%" }}
-                title={`Q${index + 1}. ${q.questionText}`}
-              >
-                <p>A. {q.optAText}</p>
-                <p>B. {q.optBText}</p>
-                <p>C. {q.optCText}</p>
-                <p>D. {q.optDText}</p>
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">Topic</span>
+                            <span className="qi-info-value">{quiz.topic}</span>
+                        </div>
 
-                {q.correctOptText && (
-                  <p style={{ color: "green", fontWeight: "bold" }}>
-                    Correct Answer: {q.correctOptText}
-                  </p>
-                )}
-              </Card>
-            </List.Item>
-          )}
-        />
-      </Card>
-    </div>
-  );
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">Difficulty</span>
+                            <span className={`qi-diff-badge ${getDifficultyClass(quiz.difficulty)}`}>
+                                {quiz.difficulty}
+                            </span>
+                        </div>
 
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">No. of Questions</span>
+                            <span className="qi-info-value">{quiz.noOfQuestions}</span>
+                        </div>
+
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">Start Time</span>
+                            <span className="qi-time">{dayjs(quiz.startTime).format("DD MMM YYYY, HH:mm")}</span>
+                        </div>
+
+                        <div className="qi-info-item">
+                            <span className="qi-info-label">End Time</span>
+                            <span className="qi-time">{dayjs(quiz.endTime).format("DD MMM YYYY, HH:mm")}</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                {/* Questions */}
+                <div className="qi-section-header">
+                    <h2 className="qi-section-title">Questions</h2>
+                    <span className="qi-section-count">{quiz.questionList?.length} questions</span>
+                </div>
+
+                <div className="qi-questions">
+                    {quiz.questionList?.map((q, index) => (
+                        <div key={index} className="qi-q-card">
+                            <div className="qi-q-header">
+                                <span className="qi-q-number">Q{index + 1}</span>
+                                <span className="qi-q-text">{q.questionText}</span>
+                            </div>
+
+                            <div className="qi-options">
+                                {[
+                                    { label: 'A', text: q.optAText },
+                                    { label: 'B', text: q.optBText },
+                                    { label: 'C', text: q.optCText },
+                                    { label: 'D', text: q.optDText },
+                                ].map((opt) => (
+                                    <div
+                                        key={opt.label}
+                                        className={`qi-option ${q.correctOptText === opt.text ? 'correct' : ''}`}
+                                    >
+                                        <span className="qi-opt-label">{opt.label}</span>
+                                        <span className="qi-opt-text">{opt.text}</span>
+                                        {q.correctOptText === opt.text && (
+                                            <span className="qi-correct-badge">✓ Correct</span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+            </main>
+        </div>
+    );
 }
 
-
-export default QuizInfo
+export default QuizInfo;

@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── ROW ────────────────────────────────────── */
+.lbr-row {
+  transition: background 0.15s ease;
+}
+
+.lbr-row:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.lbr-row td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.lbr-row.top-three td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lbr-row.top-three {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* ─── RANK ───────────────────────────────────── */
+.lbr-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 28px;
+  border-radius: 8px;
+  padding: 0 8px;
+}
+
+.lbr-medal {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.lbr-rank-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.rank-gold {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.rank-silver {
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.rank-bronze {
+  background: rgba(180, 120, 60, 0.1);
+  border: 1px solid rgba(180, 120, 60, 0.2);
+}
+
+.rank-default {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #475569;
+}
+
+/* ─── NAME ───────────────────────────────────── */
+.lbr-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lbr-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: 'Sora', sans-serif;
+}
+
+.lbr-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.lbr-row.top-three .lbr-name {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+/* ─── SCORE ──────────────────────────────────── */
+.lbr-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.score-high { color: #34d399; }
+.score-mid  { color: #fbbf24; }
+.score-low  { color: #f87171; }

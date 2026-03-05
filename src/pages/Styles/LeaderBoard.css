@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+/* ─── ROOT ───────────────────────────────────── */
+.lb-root {
+  min-height: 100vh;
+  width: 100vw;
+  background: #0a0a0f;
+  font-family: 'Sora', sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.lb-grid-overlay {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lb-glow {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.lb-glow-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(251,191,36,0.06) 0%, transparent 70%);
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+}
+
+.lb-glow-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  bottom: 0; right: 0;
+}
+
+/* ─── TOPBAR ─────────────────────────────────── */
+.lb-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 64px;
+  background: rgba(10,10,18,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(12px);
+}
+
+.lb-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: 0.2em;
+}
+
+.lb-brand span { color: #6366f1; }
+
+.lb-topbar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lb-topbar-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 100px;
+  padding: 4px 14px;
+  letter-spacing: 0.08em;
+}
+
+.lb-back-btn {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  color: #94a3b8;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lb-back-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #f1f5f9;
+}
+
+/* ─── MAIN ───────────────────────────────────── */
+.lb-main {
+  flex: 1;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── PAGE HEADER ────────────────────────────── */
+.lb-page-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.lb-page-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.lb-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: #6366f1;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 6px;
+  padding: 4px 12px;
+  letter-spacing: 0.06em;
+}
+
+/* ─── PODIUM ─────────────────────────────────── */
+.lb-podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+
+.lb-podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lb-podium-crown {
+  font-size: 24px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.lb-podium-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0a0a0f;
+}
+
+.lb-podium-avatar.gold {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 0 24px rgba(251,191,36,0.4);
+  width: 60px;
+  height: 60px;
+  font-size: 22px;
+}
+
+.lb-podium-avatar.silver {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  box-shadow: 0 0 16px rgba(148,163,184,0.3);
+}
+
+.lb-podium-avatar.bronze {
+  background: linear-gradient(135deg, #b87333, #92400e);
+  box-shadow: 0 0 16px rgba(184,115,51,0.3);
+}
+
+.lb-podium-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  max-width: 90px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lb-podium-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.lb-podium-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  border-radius: 8px 8px 0 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.lb-podium-block.gold {
+  height: 80px;
+  background: rgba(251,191,36,0.15);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-bottom: none;
+  color: #fbbf24;
+  width: 90px;
+}
+
+.lb-podium-block.silver {
+  height: 56px;
+  background: rgba(148,163,184,0.1);
+  border: 1px solid rgba(148,163,184,0.2);
+  border-bottom: none;
+  color: #94a3b8;
+}
+
+.lb-podium-block.bronze {
+  height: 40px;
+  background: rgba(184,115,51,0.1);
+  border: 1px solid rgba(184,115,51,0.2);
+  border-bottom: none;
+  color: #b87333;
+}
+
+/* ─── TABLE SECTION ──────────────────────────── */
+.lb-table-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.lb-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lb-table-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+  letter-spacing: -0.01em;
+}
+
+.lb-table-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #475569;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 3px 10px;
+  letter-spacing: 0.04em;
+}
+
+/* ─── LOADING ────────────────────────────────── */
+.lb-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+  color: #475569;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.lb-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(99,102,241,0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 600px) {
+  .lb-topbar { padding: 0 20px; }
+  .lb-topbar-center { display: none; }
+  .lb-main { padding: 32px 16px 60px; }
+  .lb-podium-block.gold { width: 70px; }
+  .lb-podium-name { max-width: 70px; font-size: 12px; }
+}

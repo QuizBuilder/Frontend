@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+.lbt-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* ─── TABLE ──────────────────────────────────── */
+.lbt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Sora', sans-serif;
+}
+
+.lbt-table thead tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.lbt-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.02);
+  white-space: nowrap;
+}
+
+.lbt-table thead th:first-child { border-radius: 8px 0 0 8px; }
+.lbt-table thead th:last-child  { border-radius: 0 8px 8px 0; }
+
+.lbt-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease;
+}
+
+.lbt-table tbody tr:last-child { border-bottom: none; }
+
+.lbt-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.lbt-table tbody td {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #94a3b8;
+  vertical-align: middle;
+}
+
+/* ─── EMPTY STATE ────────────────────────────── */
+.lbt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  gap: 10px;
+}
+
+.lbt-empty-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.lbt-empty-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.lbt-empty-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #1e293b;
+  letter-spacing: 0.03em;
+}
