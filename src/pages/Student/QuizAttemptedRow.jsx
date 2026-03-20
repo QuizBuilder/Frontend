@@ -35,14 +35,14 @@ function QuizAttemptedRow({ quiz }) {
             </td>
             <td>
                 <span className={`qar-score ${getScoreClass(quiz.score)}`}>
-                    {quiz.score}
+                    {quiz.score} / {quiz.noOfQuestions}
                 </span>
             </td>
             <td>
                 <div className="qar-actions">
                     <button
                         className="qar-btn qar-btn-info"
-                        onClick={() => navigate(`/teacher/${quiz.quizCode}/quiz_info`)}
+                        onClick={() => navigate(`/student/${quiz.quizCode}/quiz_info`)}
                     >
                         Quiz Info
                     </button>

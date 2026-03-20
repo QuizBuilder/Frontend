@@ -14,13 +14,19 @@ const QuizRow = ({ quiz }) => {
   };
 
   const formatDateTime = (dateStr) => {
-    if (!dateStr) return '—';
-    const d = new Date(dateStr);
-    return d.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    if (!dateStr) return "—";
+
+    const [date, time] = dateStr.split(" ");
+    const [day, month, year] = date.split("-");
+    const [hour, minute] = time.split(":");
+
+    const d = new Date(year, month - 1, day, hour, minute);
+
+    return d.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 

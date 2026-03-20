@@ -21,3 +21,10 @@ export const getAttemptedQuizzes = async () => {
   );
   return response.data;
 };
+
+export const getAttemptedQuizInfo = async (quizCode) => {
+  const response = await axiosInstance.get(
+    `/user/student/quiz/${quizCode}`
+  );
+  return response.data;
+};

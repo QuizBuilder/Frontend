@@ -81,7 +81,7 @@ function StudentDashboard() {
                         <span className="sd-stat-icon">✅</span>
                         <div>
                             <div className="sd-stat-num">
-                                {quizzes.filter(q => q.score >= 50).length}
+                               {quizzes.filter(q => ((q.score || 0) / (q.noOfQuestions || 1)) * 100 >= 40).length}
                             </div>
                             <div className="sd-stat-label">Passed</div>
                         </div>
@@ -90,9 +90,15 @@ function StudentDashboard() {
                         <span className="sd-stat-icon">📈</span>
                         <div>
                             <div className="sd-stat-num">
-                                {quizzes.length > 0
-                                    ? Math.round(quizzes.reduce((acc, q) => acc + (q.score || 0), 0) / quizzes.length)
-                                    : 0}%
+                                {
+                                  quizzes.length > 0
+                                    ? Math.round(
+                                        (quizzes.reduce((acc, q) => acc + (q.score || 0), 0) /
+                                          quizzes.reduce((acc, q) => acc + (q.noOfQuestions || 0), 0)) *
+                                          100
+                                      )
+                                    : 0
+                                }%
                             </div>
                             <div className="sd-stat-label">Avg. Score</div>
                         </div>

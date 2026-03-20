@@ -13,6 +13,7 @@ import QuizInfo from './pages/Teacher/QuizInfo';
 import AttemptQuiz from './pages/Student/AttemptQuiz';
 import LeaderBoard from './pages/LeaderBoard';
 import QuizQuestions from './pages/Student/QuizQuestions';
+import AttemptedQuizInfo from './pages/Student/AttemptedQuizInfo';
 
 function App() {
   
@@ -30,6 +31,7 @@ function App() {
         <Route path="/student/attempt_quiz" element={<AttemptQuiz/>}/>
         <Route path="/teacher/leaderboard/:quiz_code" element={<LeaderBoard/>}/>
         <Route path="/student/:quiz_code/attempt_quiz" element={<QuizQuestions/>}/>
+        <Route path="/student/:quiz_code/quiz_info" element={<AttemptedQuizInfo/>}/>
       </Routes> 
     </BrowserRouter>
   )

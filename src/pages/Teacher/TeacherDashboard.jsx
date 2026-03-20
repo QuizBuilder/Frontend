@@ -22,6 +22,20 @@ const TeacherDashboard = () => {
     };
     fetchQuizzes();
   }, []);
+  
+  const now = new Date();
+  const activeQuizzes = quizzes.filter(q => {
+    const [date, time] = q.endTime.split(" ");
+    const [day, month, year] = date.split("-");
+    const [hour, minute] = time.split(":");
+
+    const end = new Date(year, month - 1, day, hour, minute);
+
+    return now <= end;
+  }).length;
+
+  const totalQuizzes = quizzes.length;
+  const completedQuizzes = totalQuizzes-activeQuizzes;
 
   return (
     <div className="td-root">
@@ -71,7 +85,7 @@ const TeacherDashboard = () => {
           <div className="td-stat-card">
             <span className="td-stat-icon">📋</span>
             <div>
-              <div className="td-stat-num">{quizzes.length}</div>
+              <div className="td-stat-num">{totalQuizzes}</div>
               <div className="td-stat-label">Total Quizzes</div>
             </div>
           </div>
@@ -79,7 +93,7 @@ const TeacherDashboard = () => {
             <span className="td-stat-icon">🟢</span>
             <div>
               <div className="td-stat-num">
-                {quizzes.filter(q => q.active).length}
+                {activeQuizzes}
               </div>
               <div className="td-stat-label">Active</div>
             </div>
@@ -88,7 +102,7 @@ const TeacherDashboard = () => {
             <span className="td-stat-icon">🏁</span>
             <div>
               <div className="td-stat-num">
-                {quizzes.filter(q => !q.active).length}
+                {completedQuizzes}
               </div>
               <div className="td-stat-label">Completed</div>
             </div>

@@ -135,7 +135,16 @@ function CreateQuiz() {
               rules={[{ required: true, message: "Topic is required" }]}
             >
               <Select placeholder="Select topic">
-                <Option value="TECH">Tech</Option>
+                <Option value="OPERATING_SYSTEMS">Operating Systems</Option>
+                <Option value="DBMS">DBMS</Option>
+                <Option value="COMPUTER_NETWORKS">Computer Networks</Option>
+                <Option value="DATA_STRUCTURES">Data Structures</Option>
+                <Option value="ALGORITHMS">Algorithms</Option>
+                <Option value="OOP">Object Oriented Programming</Option>
+                <Option value="SOFTWARE_ENGINEERING">Software Engineering</Option>
+                <Option value="JAVA">Java</Option>
+                <Option value="PYTHON">Python</Option>
+                <Option value="WEB_DEVELOPMENT">Web Development</Option>
               </Select>
             </Form.Item>
 
