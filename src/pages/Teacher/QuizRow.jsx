@@ -16,15 +16,10 @@ const QuizRow = ({ quiz }) => {
   const formatDateTime = (dateStr) => {
     if (!dateStr) return "—";
 
-    const [date, time] = dateStr.split(" ");
-    const [day, month, year] = date.split("-");
-    const [hour, minute] = time.split(":");
-
-    const d = new Date(year, month - 1, day, hour, minute);
-
-    return d.toLocaleString("en-US", {
-      month: "short",
+    return new Date(dateStr).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
       day: "numeric",
+      month: "short",
       hour: "2-digit",
       minute: "2-digit",
     });

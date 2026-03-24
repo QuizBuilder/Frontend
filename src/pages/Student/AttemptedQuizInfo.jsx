@@ -4,6 +4,11 @@ import { useParams, useNavigate } from 'react-router-dom'
 import dayjs from "dayjs";
 import { getAttemptedQuizInfo } from "../../api/studentApi";
 import "./Styles/AttemptedQuizInfo.css";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 function AttemptedQuizInfo() {
     const quizCode = useParams().quiz_code;
@@ -36,9 +41,15 @@ function AttemptedQuizInfo() {
         }
     };
 
+    const getQuestionResult = (q) => {
+        if (q.selectedOptText === "") return 'skipped';
+        if (q.selectedOptText === q.correctOptText) return 'correct';
+        return 'wrong';
+    };
+
     const getOptionState = (opt, q) => {
         const isCorrect = q.correctOptText === opt.text;
-        const isSelected = q.selectedOptText === opt.text;
+        const isSelected = !!q.selectedOptText && q.selectedOptText === opt.text;  // "" won't match
         if (isCorrect && isSelected) return 'correct-selected';
         if (isCorrect && !isSelected) return 'correct';
         if (isSelected && !isCorrect) return 'wrong-selected';
@@ -55,17 +66,14 @@ function AttemptedQuizInfo() {
         );
     }
 
-   
     if (blocked) {
         return (
             <div className="sqi-root">
                 <div className="sqi-grid-overlay" />
-
                 <header className="sqi-topbar">
                     <div className="sqi-brand">EDU<span>PORTAL</span></div>
                     <button className="sqi-back-btn" onClick={() => navigate(-1)}>← Back</button>
                 </header>
-
                 <main className="sqi-main">
                     <div className="sqi-blocked">
                         <div className="sqi-blocked-icon">🔒</div>
@@ -89,8 +97,18 @@ function AttemptedQuizInfo() {
 
     const totalQuestions = quiz.questionList?.length || 0;
     const correctCount = quiz.questionList?.filter(
-        q => q.selectedOptText === q.correctOptText
+        q => !!q.selectedOptText && q.selectedOptText === q.correctOptText
     ).length || 0;
+    const skippedCount = quiz.questionList?.filter(
+        q => !q.selectedOptText  // catches "", null, undefined
+    ).length || 0;
+    const wrongCount = totalQuestions - correctCount - skippedCount;
+
+    const resultConfig = {
+        correct:  { className: 'result-correct',  label: '✓ Correct' },
+        wrong:    { className: 'result-wrong',    label: '✗ Wrong'   },
+        skipped:  { className: 'result-skipped',  label: '— Skipped' },
+    };
 
     return (
         <div className="sqi-root">
@@ -109,6 +127,7 @@ function AttemptedQuizInfo() {
                     <p className="sqi-page-sub">Review your answers and see the correct solutions</p>
                 </div>
 
+                {/* Info Card */}
                 <div className="sqi-info-card">
                     <div className="sqi-info-grid">
                         <div className="sqi-info-item">
@@ -131,15 +150,16 @@ function AttemptedQuizInfo() {
                         </div>
                         <div className="sqi-info-item">
                             <span className="sqi-info-label">Start Time</span>
-                            <span className="sqi-time">{dayjs(quiz.startTime).format("DD MMM YYYY, HH:mm")}</span>
+                            <span className="sqi-time">{dayjs.utc(quiz.startTime).tz("Asia/Kolkata").format("DD MMM YYYY, HH:mm")}</span>
                         </div>
                         <div className="sqi-info-item">
                             <span className="sqi-info-label">End Time</span>
-                            <span className="sqi-time">{dayjs(quiz.endTime).format("DD MMM YYYY, HH:mm")}</span>
+                            <span className="sqi-time">{dayjs.utc(quiz.endTime).tz("Asia/Kolkata").format("DD MMM YYYY, HH:mm")}</span>
                         </div>
                     </div>
                 </div>
 
+                {/* Score Card */}
                 <div className="sqi-score-card">
                     <div className="sqi-score-left">
                         <p className="sqi-score-label">YOUR SCORE</p>
@@ -152,8 +172,12 @@ function AttemptedQuizInfo() {
                             <span className="sqi-stat-label">Correct</span>
                         </div>
                         <div className="sqi-score-stat">
-                            <span className="sqi-stat-num wrong-num">{totalQuestions - correctCount}</span>
+                            <span className="sqi-stat-num wrong-num">{wrongCount}</span>
                             <span className="sqi-stat-label">Wrong</span>
+                        </div>
+                        <div className="sqi-score-stat">
+                            <span className="sqi-stat-num skipped-num">{skippedCount}</span>
+                            <span className="sqi-stat-label">Skipped</span>
                         </div>
                         <div className="sqi-score-stat">
                             <span className="sqi-stat-num">{totalQuestions}</span>
@@ -165,15 +189,16 @@ function AttemptedQuizInfo() {
                         <div className="sqi-score-bar">
                             <div
                                 className="sqi-score-bar-fill"
-                                style={{ width: `${totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0}%` }}
+                                style={{ width: `${totalQuestions > 0 ? (correctCount / (wrongCount + correctCount)) * 100 : 0}%` }}
                             />
                         </div>
                         <p className="sqi-score-bar-pct">
-                            {totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0}%
+                            {totalQuestions > 0 ? Math.round((correctCount / (wrongCount + correctCount)) * 100) : 0}%
                         </p>
                     </div>
                 </div>
 
+                {/* Legend */}
                 <div className="sqi-legend">
                     <div className="sqi-legend-item">
                         <span className="sqi-legend-dot correct-selected-dot" /> Correct — your answer
@@ -184,49 +209,56 @@ function AttemptedQuizInfo() {
                     <div className="sqi-legend-item">
                         <span className="sqi-legend-dot wrong-dot" /> Wrong — your answer
                     </div>
+                    <div className="sqi-legend-item">
+                        <span className="sqi-legend-dot skipped-dot" /> Skipped
+                    </div>
                 </div>
 
+                {/* Section Header */}
                 <div className="sqi-section-header">
                     <h2 className="sqi-section-title">Question Review</h2>
                     <span className="sqi-section-count">{totalQuestions} questions</span>
                 </div>
 
+                {/* Questions */}
                 <div className="sqi-questions">
-                    {quiz.questionList?.map((q, index) => (
-                        <div key={index} className="sqi-q-card">
-                            <div className="sqi-q-header">
-                                <span className="sqi-q-number">Q{index + 1}</span>
-                                <span className="sqi-q-text">{q.questionText}</span>
-                                <span className={`sqi-q-result ${q.selectedOptText === q.correctOptText ? 'result-correct' : 'result-wrong'}`}>
-                                    {q.selectedOptText === q.correctOptText ? '✓ Correct' : '✗ Wrong'}
-                                </span>
-                            </div>
-                            <div className="sqi-options">
-                                {[
-                                    { label: 'A', text: q.optAText },
-                                    { label: 'B', text: q.optBText },
-                                    { label: 'C', text: q.optCText },
-                                    { label: 'D', text: q.optDText },
-                                ].map((opt) => {
-                                    const state = getOptionState(opt, q);
-                                    return (
-                                        <div key={opt.label} className={`sqi-option ${state}`}>
-                                            <span className="sqi-opt-label">{opt.label}</span>
-                                            <span className="sqi-opt-text">{opt.text}</span>
-                                            <div className="sqi-opt-tags">
-                                                {q.selectedOptText === opt.text && (
-                                                    <span className="sqi-tag sqi-tag-selected">Your Answer</span>
-                                                )}
-                                                {q.correctOptText === opt.text && (
-                                                    <span className="sqi-tag sqi-tag-correct">✓ Correct</span>
-                                                )}
+                    {quiz.questionList?.map((q, index) => {
+                        const result = getQuestionResult(q);
+                        const { className, label } = resultConfig[result];
+                        return (
+                            <div key={index} className="sqi-q-card">
+                                <div className="sqi-q-header">
+                                    <span className="sqi-q-number">Q{index + 1}</span>
+                                    <span className="sqi-q-text">{q.questionText}</span>
+                                    <span className={`sqi-q-result ${className}`}>{label}</span>
+                                </div>
+                                <div className="sqi-options">
+                                    {[
+                                        { label: 'A', text: q.optAText },
+                                        { label: 'B', text: q.optBText },
+                                        { label: 'C', text: q.optCText },
+                                        { label: 'D', text: q.optDText },
+                                    ].map((opt) => {
+                                        const state = getOptionState(opt, q);
+                                        return (
+                                            <div key={opt.label} className={`sqi-option ${state}`}>
+                                                <span className="sqi-opt-label">{opt.label}</span>
+                                                <span className="sqi-opt-text">{opt.text}</span>
+                                                <div className="sqi-opt-tags">
+                                                    {!!q.selectedOptText && q.selectedOptText === opt.text && (
+                                                        <span className="sqi-tag sqi-tag-selected">Your Answer</span>
+                                                    )}
+                                                    {q.correctOptText === opt.text && (
+                                                        <span className="sqi-tag sqi-tag-correct">✓ Correct</span>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
             </main>

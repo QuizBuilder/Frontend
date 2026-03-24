@@ -5,6 +5,12 @@ import dayjs from "dayjs";
 import { getQuizInfo } from "../../api/teacherApi";
 import "./Styles/QuizInfo.css";
 
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 function QuizInfo() {
     const quizCode = useParams().quiz_code;
     const navigate = useNavigate();
@@ -94,12 +100,12 @@ function QuizInfo() {
 
                         <div className="qi-info-item">
                             <span className="qi-info-label">Start Time</span>
-                            <span className="qi-time">{dayjs(quiz.startTime).format("DD MMM YYYY, HH:mm")}</span>
+                            <span className="qi-time">{dayjs.utc(quiz.startTime).tz("Asia/Kolkata").format("DD MMM YYYY, HH:mm")}</span>
                         </div>
 
                         <div className="qi-info-item">
                             <span className="qi-info-label">End Time</span>
-                            <span className="qi-time">{dayjs(quiz.endTime).format("DD MMM YYYY, HH:mm")}</span>
+                            <span className="qi-time">{dayjs.utc(quiz.endTime).tz("Asia/Kolkata").format("DD MMM YYYY, HH:mm")}</span>
                         </div>
 
                     </div>

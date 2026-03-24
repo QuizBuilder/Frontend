@@ -329,3 +329,46 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+
+
+.sd-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sd-profile-btn {
+    height: 42px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.09) !important;
+    border-radius: 10px !important;
+    font-family: 'Sora', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+    padding: 0 20px !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+}
+
+.sd-profile-btn:hover {
+    background: rgba(255,255,255,0.08) !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255,255,255,0.15) !important;
+}
+
+.sd-footer-arrow {
+    margin-left: auto;
+    color: #334155;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.sd-sidebar-footer:hover .sd-footer-arrow {
+    color: #6366f1;
+}
+
+.sd-sidebar-footer:hover {
+    background: rgba(99,102,241,0.06);
+    border-color: rgba(99,102,241,0.15);
+}

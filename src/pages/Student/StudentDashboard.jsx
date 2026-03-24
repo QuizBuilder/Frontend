@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import QuizzesAttemptedTable from './QuizzesAttemptedTable';
 import { Button, message } from "antd";
-import api from "../../api/axios";
 import { getAttemptedQuizzes } from "../../api/studentApi";
 import "./Styles/StudentDashboard.css";
 
@@ -41,13 +40,22 @@ function StudentDashboard() {
                         <span className="sd-nav-icon">✏️</span>
                         Attempt Quiz
                     </div>
+                    <div className="sd-nav-item" onClick={() => navigate("/student/profile")}>
+                        <span className="sd-nav-icon">👤</span>
+                        My Profile
+                    </div>
                 </nav>
-                <div className="sd-sidebar-footer">
+                <div
+                    className="sd-sidebar-footer"
+                    onClick={() => navigate("/student/profile")}
+                    style={{ cursor: 'pointer' }}
+                >
                     <div className="sd-avatar">S</div>
                     <div className="sd-user-info">
                         <span className="sd-user-name">Student</span>
                         <span className="sd-user-role">Learner</span>
                     </div>
+                    <span className="sd-footer-arrow">→</span>
                 </div>
             </aside>
 
@@ -60,12 +68,20 @@ function StudentDashboard() {
                         <p className="sd-header-sub">Good to see you 👋</p>
                         <h1 className="sd-header-title">Student Dashboard</h1>
                     </div>
-                    <Button
-                        className="sd-attempt-btn"
-                        onClick={() => navigate("/student/attempt_quiz")}
-                    >
-                        + Attempt Quiz
-                    </Button>
+                    <div className="sd-header-actions">
+                        <Button
+                            className="sd-profile-btn"
+                            onClick={() => navigate("/student/profile")}
+                        >
+                            👤 My Profile
+                        </Button>
+                        <Button
+                            className="sd-attempt-btn"
+                            onClick={() => navigate("/student/attempt_quiz")}
+                        >
+                            + Attempt Quiz
+                        </Button>
+                    </div>
                 </header>
 
                 {/* Stats Row */}
@@ -81,7 +97,7 @@ function StudentDashboard() {
                         <span className="sd-stat-icon">✅</span>
                         <div>
                             <div className="sd-stat-num">
-                               {quizzes.filter(q => ((q.score || 0) / (q.noOfQuestions || 1)) * 100 >= 40).length}
+                                {quizzes.filter(q => ((q.score || 0) / (q.noOfQuestions || 1)) * 100 >= 40).length}
                             </div>
                             <div className="sd-stat-label">Passed</div>
                         </div>
@@ -90,15 +106,12 @@ function StudentDashboard() {
                         <span className="sd-stat-icon">📈</span>
                         <div>
                             <div className="sd-stat-num">
-                                {
-                                  quizzes.length > 0
+                                {quizzes.length > 0
                                     ? Math.round(
                                         (quizzes.reduce((acc, q) => acc + (q.score || 0), 0) /
-                                          quizzes.reduce((acc, q) => acc + (q.noOfQuestions || 0), 0)) *
-                                          100
-                                      )
-                                    : 0
-                                }%
+                                            quizzes.reduce((acc, q) => acc + (q.noOfQuestions || 0), 0)) * 100
+                                    )
+                                    : 0}%
                             </div>
                             <div className="sd-stat-label">Avg. Score</div>
                         </div>
