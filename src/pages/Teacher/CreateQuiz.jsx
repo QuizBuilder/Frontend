@@ -25,8 +25,8 @@ function CreateQuiz() {
       noOfQuestions: values.noOfQuestions,
       difficulty: values.difficulty,
       topic: values.topic,
-      startTime: values.startTime.format("YYYY-MM-DDTHH:mm:ss"),
-      endTime: values.endTime.format("YYYY-MM-DDTHH:mm:ss"),
+      startTime: values.startTime.toISOString(),
+      endTime: values.endTime.toISOString(),
       additionalInstruction: values.additionalInstruction?.trim() || null,
     };
 

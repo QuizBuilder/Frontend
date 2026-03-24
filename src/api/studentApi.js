@@ -28,3 +28,10 @@ export const getAttemptedQuizInfo = async (quizCode) => {
   );
   return response.data;
 };
+
+export const getStudentProfile = async () => {
+  const response = await axiosInstance.get(
+    `/user/student/profile`
+  );
+  return response.data; 
+}

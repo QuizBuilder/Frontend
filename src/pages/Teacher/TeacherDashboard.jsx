@@ -23,14 +23,10 @@ const TeacherDashboard = () => {
     fetchQuizzes();
   }, []);
   
-  const now = new Date();
+  const now = Date.now();
+
   const activeQuizzes = quizzes.filter(q => {
-    const [date, time] = q.endTime.split(" ");
-    const [day, month, year] = date.split("-");
-    const [hour, minute] = time.split(":");
-
-    const end = new Date(year, month - 1, day, hour, minute);
-
+    const end = new Date(q.endTime).getTime();
     return now <= end;
   }).length;
 
